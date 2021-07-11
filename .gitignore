@@ -1,0 +1,16 @@
+# .git_ignore for "algo_spec" project 
+
+# Ignore all
+*
+
+# Unignore all w/ extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+### Above combo will ignore all files w/out extensions ###
+
+# Ignore MacOS, VS Code, binaries, and other non-vital files
+.DS_Store
+*.dSYM
