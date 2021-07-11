@@ -6,7 +6,13 @@ void int_multiplication(unsigned long long x, unsigned long long y) {
 
 int main() {
     
-    int_multiplication(1,2);
+    unsigned long long x = 1234;
+    unsigned long long y = 5678;
+    
+    std::cout << "x.front = " << front(x);
+    // std::cout << "y.front = " << back(y);
+
+    int_multiplication(x,y);
     
     return 0;
 }
