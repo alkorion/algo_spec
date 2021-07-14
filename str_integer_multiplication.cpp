@@ -95,6 +95,24 @@ std::string int_sum(std::string x, std::string y) {
     return sum_string;
 }
 
+std::string find_larger(std::string a, std::string b) {
+    // assumes strings are same length, and positive integers
+    int n = a.length();
+
+    for (int i{0}; i<n; ++i) 
+    {
+        int a_int = std::stoi(a.substr(i,1));
+        int b_int = std::stoi(b.substr(i,1));
+
+        if (a_int > b_int)
+            return a;
+        else if (b_int > a_int)
+            return b;
+    }
+
+    // if no digit is ever larger, return a as arbitrary "larger"
+    return a;
+}
 
 // std::string int_diff(std::string a, std::string b) { // assumes both inputs are positive
 //     /* 
@@ -122,15 +140,13 @@ std::string int_sum(std::string x, std::string y) {
 //         is_neg = true;
 //     }
 //     else // a and b are equal length
-
-//         for (int i{a.length()-1}; i >= 0; --i)
-//             // if a_lead > b_lead
-        
-//         if (a > b)
-//         {
-//             bigger = a;
+//     {
+//         bigger = find_larger(a,b);
+//         if (bigger == a)
 //             smaller = b;
-//         }
+//         else
+//             smaller = a;
+//     }
 
 
 //     std::string diff_string;
@@ -151,6 +167,7 @@ std::string int_sum(std::string x, std::string y) {
 
 //     return diff_string;
 // }
+
 
 std::string r(std::string x, std::string y) {
     // // base case: if x and y are 1-digit
@@ -204,12 +221,10 @@ int main() {
     std::cout << "Enter another positive integer: ";
     std::cin >> y;
 
-    std::cout << "front of num: " << front(x) << "\n";
-    std::cout << "back of num: " << back(x) << "\n";
+    std::cout << "Between " << x << " and " << y << ", " << find_larger(x,y) << " is larger!\n";
+    std::cout << "Sum of " << x << " + " << y << " = " << int_sum(x,y) << "\n";
 
     // std::cout << "Product of " << x << " x " << y << " = " << r(x,y) << "\n";
-
-    std::cout << "Sum of " << x << " + " << y << " = " << int_sum(x,y) << "\n";
 
     return 0;
 }
