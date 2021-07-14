@@ -1,6 +1,7 @@
 #include<iostream>
 #include<math.h>
 
+// need to update front() and back() to have notions of a passed "n" so that the multiples are same size
 std::string front(std::string s) {
     /*
     psuedo
@@ -158,8 +159,10 @@ std::string int_diff(std::string a, std::string b) { // assumes both inputs are 
         if (bigger == a)
             smaller = b;
         else
+        {
             smaller = a;
             is_neg = true;
+        }
     }
 
     std::string diff_string;
@@ -210,42 +213,65 @@ std::string int_diff(std::string a, std::string b) { // assumes both inputs are 
 
 
 std::string r(std::string x, std::string y) {
-    // // base case: if x and y are 1-digit
-    // if (x.length() == 1 && y.length() == 1)
-    // {
-    //     int product = std::stoi(x) * std::stoi(y);
-    //     return std::to_string(product);
-    // }
+    // base case: if x and y are 1-digit
+    if (x.length() == 1 && y.length() == 1)
+    {
+        int product = std::stoi(x) * std::stoi(y);
+        return std::to_string(product);
+    }
 
-    // else 
-    // {
+    else 
+    {
         
-    //     int n = std::max(x.length(), y.length());
+        int n = std::max(x.length(), y.length());
 
-    //     if (n % 2 != 0) 
-    //         n += 1;
+        if (n % 2 != 0) 
+            n += 1;
 
-    //     std::string a = front(x);
-    //     std::string b = back(x);
-    //     std::string c = front(y);
-    //     std::string d = back(y);
+        std::string a = front(x);
+        std::string b = back(x);
+        std::string c = front(y);
+        std::string d = back(y);
 
-    //     std::string step_1 = r(a, c);
-    //     std::string step_2 = r(b, d);
+        std::string step_1 = r(a, c);
+        std::string step_2 = r(b, d);
         
-    //     std::string step_3 = r(int_sum(a,b), int_sum(c,d));
+        std::string step_3 = r(int_sum(a,b), int_sum(c,d));
 
-    //     std::string mid_term = step_3 - int_sum;(step_1, step_2);
+        std::string mid_term = int_diff(step_3, int_sum(step_1, step_2));
 
-    //     // unsigned long long final_product = 10.power(n)*step_1 + 10.power(n/2)*mid_term + step_2;
-    //     unsigned long long final_product = pow(10, n)*step_1 + pow(10, n/2)*mid_term + step_2;
-    //     return final_product;
+        // final_product = pow(10, n)*step_1 + pow(10, n/2)*mid_term + step_2;
+        std::string term_1;
+
+        // multiply front term by 10^n
+        for (int i=0; i<n; ++i) {
+            step_1.append("0");
+        }
+
+        // multiply front term by 10^n
+        for (int i=0; i<n/2; ++i) {
+            mid_term.append("0");
+        }
+
+        std::string final_product = int_sum(int_sum(step_1, mid_term), step_2);
+
+        // remove leading zeros
+        int final_len = final_product.length();
+        for (int i{0}; i < final_len; ++i)
+        {
+            if (final_product.at(0) == '0')
+                final_product.erase(0,1); // remove 1st character (leading zero)
+            else
+                break;
+        }
+
+        return final_product;
     
 
-    // }
+    }
 
-    // debug return case
-    return 0;
+    // // debug return case
+    // return 0;
 }
 
 
@@ -262,9 +288,9 @@ int main() {
     std::cin >> y;
 
     // std::cout << "Between " << x << " and " << y << ", " << find_larger(x,y) << " is larger!\n";
-    std::cout << "Diff of " << x << " - " << y << " = " << int_diff(x,y) << "\n";
+    // std::cout << "Diff of " << x << " - " << y << " = " << int_diff(x,y) << "\n";
 
-    // std::cout << "Product of " << x << " x " << y << " = " << r(x,y) << "\n";
+    std::cout << "Product of " << x << " x " << y << " = " << r(x,y) << "\n";
 
     return 0;
 }
