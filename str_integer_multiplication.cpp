@@ -114,59 +114,99 @@ std::string find_larger(std::string a, std::string b) {
     return a;
 }
 
-// std::string int_diff(std::string a, std::string b) { // assumes both inputs are positive
-//     /* 
-//     psuedo
-//     find out which is bigger (using length or largest first digit)
-//     from right to left, take large - small number (carry the one, etc)
-//     if b > a, add a negative sign
-//     return difference
-//     */
+std::string int_diff(std::string a, std::string b) { // assumes both inputs are positive
+    /* 
+    psuedo
+    find out which is bigger (using length or largest first digit)
+    from right to left, take large - small number (carry the one, etc)
+    if b > a, add a negative sign
+    return difference
+    */
 
-//     std::string bigger;
-//     std::string smaller;
-
-//     bool is_neg { false };
-
-//     if (a.length() > b.length()) // positive difference case 
-//     {
-//         bigger = a;
-//         smaller = b;
-//     }
-//     else if (b.length() > a.length()) // negative case
-//     {
-//         bigger = b;
-//         smaller = a;
-//         is_neg = true;
-//     }
-//     else // a and b are equal length
-//     {
-//         bigger = find_larger(a,b);
-//         if (bigger == a)
-//             smaller = b;
-//         else
-//             smaller = a;
-//     }
+    std::string bigger;
+    std::string smaller;
 
 
-//     std::string diff_string;
-//     int carry_1 {0}; // intitalize the carry var to 0 for first sum
+    int a_len = a.length();
+    int b_len = b.length();
 
-//     for (int i{a.length()-1}; i >= 0; --i) {
-//         int x_int = std::stoi(x.substr(i,1));
-//         int y_int = std::stoi(y.substr(i,1));
-//         int sum = x_int + y_int + carry_1;
+    bool is_neg { false };
 
-//         carry_1 = sum / 10;
-//         // append the remainder to the total sum string
-//         sum_string.insert(0, std::to_string(sum % 10));
-//     }
+    if (a_len > b_len) // positive difference case 
+    {
+        bigger = a;
+        smaller = b;
+        
+        // pad out b to be same length as a
+        for (int i{ (a_len - b_len) }; i>0; i--)
+            smaller.insert(0, "0");
+    }
+    else if (b_len > a_len) // negative case
+    {
+        bigger = b;
+        smaller = a;
+        is_neg = true;
+        
+        // pad out b to be same length as a
+        for (int i{ b_len - a_len }; i>0; i--)
+            smaller.insert(0,"0");
 
-//     if (carry_1) // case where final sum was > 10
-//         sum_string.insert(0, "1");
+    }
+    else // a and b are equal length
+    {
+        bigger = find_larger(a,b);
+        if (bigger == a)
+            smaller = b;
+        else
+            smaller = a;
+            is_neg = true;
+    }
 
-//     return diff_string;
-// }
+    std::string diff_string;
+
+    int dec_1 {0};
+
+    int big_len = bigger.length();
+
+    for (int i{big_len-1}; i >= 0; --i) {
+        
+        int big_int = std::stoi(bigger.substr(i,1)) + dec_1;
+        int small_int = std::stoi(smaller.substr(i,1));
+
+        int diff;
+        
+        // if diff < 0, pad w/ 10 and decriment the next diff
+        if (big_int < small_int)
+        {
+            diff = (big_int+10) - small_int;
+            dec_1 = -1;
+        }
+        else // diff is > 0, carry on
+        {
+            diff = big_int - small_int;
+            dec_1 = 0;
+        }
+
+        // append the remainder to the total sum string
+        diff_string.insert(0, std::to_string(diff));
+    }
+
+    // remove leading zeros
+    int diff_len = diff_string.length();
+    for (int i{0}; i < diff_len; ++i)
+    {
+        if (diff_string.at(0) == '0')
+            diff_string.erase(0,1); // remove 1st character (leading zero)
+        else
+            break;
+    }
+
+    // add negative
+    if (is_neg)
+        diff_string.insert(0,"-");
+
+    return diff_string;
+}
 
 
 std::string r(std::string x, std::string y) {
@@ -221,8 +261,8 @@ int main() {
     std::cout << "Enter another positive integer: ";
     std::cin >> y;
 
-    std::cout << "Between " << x << " and " << y << ", " << find_larger(x,y) << " is larger!\n";
-    std::cout << "Sum of " << x << " + " << y << " = " << int_sum(x,y) << "\n";
+    // std::cout << "Between " << x << " and " << y << ", " << find_larger(x,y) << " is larger!\n";
+    std::cout << "Diff of " << x << " - " << y << " = " << int_diff(x,y) << "\n";
 
     // std::cout << "Product of " << x << " x " << y << " = " << r(x,y) << "\n";
 
