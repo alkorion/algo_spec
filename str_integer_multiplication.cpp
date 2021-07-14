@@ -1,43 +1,62 @@
 #include<iostream>
 #include<math.h>
 
-// need to update front() and back() to have notions of a passed "n" so that the multiples are same size
-std::string front(std::string s) {
+std::string remove_lead_zeros(std::string s) {
+    int len = s.length();
+    for (int i{0}; i < len-1; ++i)
+    {
+        if (s.at(0) == '0')
+            s.erase(0,1); // remove 1st character (leading zero)
+        else
+            break;
+    }
+
+    return s;
+}
+
+// assumes the n is even & positive int
+std::string front(std::string s, int n) {
     /*
-    psuedo
-    find string length
-    if len is odd += 1
-    return substring of front
+    if len < n
+        add zeros until len = n
+        return substring
+    else // len=n
+        return substring
+    
     */
 
     int len = s.length();
 
-    if (len % 2 != 0) 
+    if (len < n)
     {
-        len += 1;           // make sure length is "even"
-        s.insert(0,"0");    // append leading zero to make length correct
-    }
-    std::string front_str = s.substr(0,len/2);
+        for (int i{0}; i < (n-len); ++i)
+            s.insert(0, "0");    // append leading zero to make length correct
+    }   
+    std::string front_str = s.substr(0,n/2);
+    front_str = remove_lead_zeros(front_str);
 
     return front_str;
 }
 
-std::string back(std::string s) {
+std::string back(std::string s, int n) {
     /*
-    psuedo
-    find string length
-    if len is odd += 1
-    return substring of front
+    if len < n
+        add zeros until len = n
+        return substring
+    else // len=n
+        return substring
+    
     */
 
     int len = s.length();
 
-    if (len % 2 != 0) 
+    if (len < n)
     {
-        len += 1;           // make sure length is "even"
-        s.insert(0,"0");    // append leading zero to make length correct
-    }
-    std::string back_str = s.substr(len/2,len);
+        for (int i{0}; i < (n-len); ++i)
+            s.insert(0, "0");    // append leading zero to make length correct
+    }   
+    std::string back_str = s.substr(n/2,n);
+    back_str = remove_lead_zeros(back_str);
 
     return back_str;
 }
@@ -195,14 +214,7 @@ std::string int_diff(std::string a, std::string b) { // assumes both inputs are 
     }
 
     // remove leading zeros
-    int diff_len = diff_string.length();
-    for (int i{0}; i < diff_len; ++i)
-    {
-        if (diff_string.at(0) == '0')
-            diff_string.erase(0,1); // remove 1st character (leading zero)
-        else
-            break;
-    }
+    diff_string = remove_lead_zeros(diff_string);
 
     // add negative
     if (is_neg)
@@ -211,7 +223,7 @@ std::string int_diff(std::string a, std::string b) { // assumes both inputs are 
     return diff_string;
 }
 
-
+// assumes positive integers
 std::string r(std::string x, std::string y) {
     // base case: if x and y are 1-digit
     if (x.length() == 1 && y.length() == 1)
@@ -228,10 +240,10 @@ std::string r(std::string x, std::string y) {
         if (n % 2 != 0) 
             n += 1;
 
-        std::string a = front(x);
-        std::string b = back(x);
-        std::string c = front(y);
-        std::string d = back(y);
+        std::string a = front(x, n);
+        std::string b = back(x, n);
+        std::string c = front(y, n);
+        std::string d = back(y, n);
 
         std::string step_1 = r(a, c);
         std::string step_2 = r(b, d);
@@ -255,23 +267,13 @@ std::string r(std::string x, std::string y) {
 
         std::string final_product = int_sum(int_sum(step_1, mid_term), step_2);
 
-        // remove leading zeros
-        int final_len = final_product.length();
-        for (int i{0}; i < final_len; ++i)
-        {
-            if (final_product.at(0) == '0')
-                final_product.erase(0,1); // remove 1st character (leading zero)
-            else
-                break;
-        }
+        final_product = remove_lead_zeros(final_product);
 
         return final_product;
     
 
     }
 
-    // // debug return case
-    // return 0;
 }
 
 
@@ -286,6 +288,12 @@ int main() {
     std::cin >> x;
     std::cout << "Enter another positive integer: ";
     std::cin >> y;
+
+    // int n = std::max(x.length(), y.length());
+    // if (n % 2 != 0) {n += 1;}
+    // std::cout << "Front(x) is " << front(x, 8) << " and Back(x) is " << back(x, 8) << "\n";
+
+    // std::cout << x << " with leading zeros removed is: " << remove_lead_zeros(x) << "\n";
 
     // std::cout << "Between " << x << " and " << y << ", " << find_larger(x,y) << " is larger!\n";
     // std::cout << "Diff of " << x << " - " << y << " = " << int_diff(x,y) << "\n";
