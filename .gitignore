@@ -14,3 +14,6 @@
 # Ignore MacOS, VS Code, binaries, and other non-vital files
 .DS_Store
 *.dSYM
+
+# Ignore test directory for quick C++ trials
+test_cpp/
