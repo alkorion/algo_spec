@@ -3,7 +3,7 @@
 
 // array load_array_from_path(string file_path)
 
-// int count_invs(array a, int n)
-// int count_split_invs(array a, int n)
+// (vector, int) sort_and_count_invs(vector a, int n)
+// (vector, int) merge_and_count_split_invs(vector a, vector b , int n)
 
 #endif
