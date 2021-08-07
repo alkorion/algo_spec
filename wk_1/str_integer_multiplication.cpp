@@ -1,4 +1,5 @@
 #include<iostream>
+#include<string>
 #include<math.h>
 
 std::string remove_lead_zeros(std::string s) {
