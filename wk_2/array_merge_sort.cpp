@@ -16,7 +16,6 @@ void print_array(int* start, int* end) {
 void merge(array a, int* left_start, int* left_end, int* right_start, int* right_end) {
     // temp return array
     array return_array;
-    print_array(return_array.begin(), return_array.end()); // debug purposes
     int a_size = static_cast<int>(a.size());
 
     for (int k = 0; k < a_size; k++) {
