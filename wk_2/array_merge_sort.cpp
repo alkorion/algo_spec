@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 
-constexpr int array_size = 8;
+constexpr int array_size = 100000;
 
 using array = std::array<int,array_size>;
 using vector = std::vector<int>;
@@ -17,7 +17,7 @@ void print_array(int* start, int* end) {
     std::cout << "]\n";
 }
 
-void merge_and_count_split_inv(int& count, array& a, int* left_start, int* left_end, int* right_start, int* right_end) {
+void merge_and_count_split_inv(long long& count, array& a, int* left_start, int* left_end, int* right_start, int* right_end) {
     // temp return vector
     vector return_array;
     int k_size = right_end - left_start;
@@ -43,6 +43,7 @@ void merge_and_count_split_inv(int& count, array& a, int* left_start, int* left_
                 return_array[k] = *left_iter;
                 ++left_iter;
                 ++k;
+                // ++count; //count += remaining left_array vals;
             }
             break;
         }
@@ -55,6 +56,11 @@ void merge_and_count_split_inv(int& count, array& a, int* left_start, int* left_
         else { // assuming no equal values in array
             return_array[k] = *right_iter;
             ++right_iter;
+
+            // count += remaining left_array vals
+            for (int* temp_left_iter = left_iter; temp_left_iter != left_end; ++temp_left_iter) {
+                ++count;
+            }
         }
     }
     
@@ -69,7 +75,7 @@ void merge_and_count_split_inv(int& count, array& a, int* left_start, int* left_
 
 }
 
-void sort_and_count(int& count, array& a, int* start, int* end) {
+void sort_and_count(long long& count, array& a, int* start, int* end) {
     int n = end - start;
 
     // base case, no re-arranging needed
@@ -94,12 +100,11 @@ void sort_and_count(int& count, array& a, int* start, int* end) {
 
 int main() {
     
-    // array a = { 1, 3, 5, 7, 2, 4, 6, 8 };
-    // array a = { 8, 7, 6, 5, 4, 3, 2, 1 };
+
     array a;
 
-    std::string file_name {"test_array.txt"};
-    // std::string file_name {"IntegerArray.txt"};
+    // std::string file_name {"test_array.txt"};
+    std::string file_name {"IntegerArray.txt"};
 
 
     std::ifstream in_file {file_name};
@@ -114,14 +119,20 @@ int main() {
         ++iter;
     }
 
-    int count = 0;
+    // array a = { 1, 3, 5, 7, 2, 4, 6, 8 };
+    // array a = { 8, 7, 6, 5, 4, 3, 2, 1 };
 
-    print_array(a.begin(), a.end());
+    // array a = { 3, 1, 5, 7, 2, 4, 6, 8 };
+
+    long long count = 0;
+
+    // print_array(a.begin(), a.end());
 
     sort_and_count(count, a, a.begin(), a.end());
 
-    print_array(a.begin(), a.end());
+    // print_array(a.begin(), a.end());
 
+    std::cout << "Total inversions: " << count << '\n';
 
     return 0;
 }
