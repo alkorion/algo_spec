@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <array>
+#include <fstream>
+#include <string>
 
 constexpr int array_size = 8;
 
@@ -56,7 +58,7 @@ void merge(array& a, int* left_start, int* left_end, int* right_start, int* righ
         }
     }
     
-    std::cout << "Return array: "; print_array(&return_array[0], &return_array[k_size-1]);
+    // std::cout << "Return array: "; print_array(&return_array[0], &return_array[k_size-1]);
 
     int* a_iter = left_start;
     // copy over return array into original array
@@ -93,17 +95,25 @@ void merge_sort(array& a, int* start, int* end) {
 int main() {
     
     // array a = { 1, 3, 5, 7, 2, 4, 6, 8 };
-    array a = { 8, 7, 6, 5, 4, 3, 2, 1 };
-    // array a = { 1, 3, 2, 4 };
-    // array a = { 4, 3, 2 ,1 };
+    // array a = { 8, 7, 6, 5, 4, 3, 2, 1 };
+    array a;
 
+    std::string file_name {"test_array.txt"};
+
+    std::ifstream in_file {file_name};
+
+    int* iter = a.begin();
+
+    while (in_file) {
+        // read stuff from the file into a string and print it
+        int num;
+        in_file >> num;
+        *iter = num;
+        ++iter;
+    }
 
 
     print_array(a.begin(), a.end());
-
-    // merge(a, a.begin(), a.begin()+4, a.begin()+4, a.end());
-
-    // print_array(a.begin(), a.end());
 
     merge_sort(a, a.begin(), a.end());
 
