@@ -17,7 +17,7 @@ void print_array(int* start, int* end) {
     std::cout << "]\n";
 }
 
-void merge(array& a, int* left_start, int* left_end, int* right_start, int* right_end) {
+void merge_and_count_split_inv(int& count, array& a, int* left_start, int* left_end, int* right_start, int* right_end) {
     // temp return vector
     vector return_array;
     int k_size = right_end - left_start;
@@ -69,7 +69,7 @@ void merge(array& a, int* left_start, int* left_end, int* right_start, int* righ
 
 }
 
-void merge_sort(array& a, int* start, int* end) {
+void sort_and_count(int& count, array& a, int* start, int* end) {
     int n = end - start;
 
     // base case, no re-arranging needed
@@ -84,11 +84,11 @@ void merge_sort(array& a, int* start, int* end) {
     int* right_end = end;
 
     // sort each half of the original array in place
-    merge_sort(a, left_start, left_end);
-    merge_sort(a, right_start, right_end);
+    sort_and_count(count, a, left_start, left_end);
+    sort_and_count(count, a, right_start, right_end);
 
     // merge together the two sub-arrays in place
-    merge(a, left_start, left_end, right_start, right_end);
+    merge_and_count_split_inv(count, a, left_start, left_end, right_start, right_end);
 
 }
 
@@ -99,6 +99,8 @@ int main() {
     array a;
 
     std::string file_name {"test_array.txt"};
+    // std::string file_name {"IntegerArray.txt"};
+
 
     std::ifstream in_file {file_name};
 
@@ -112,10 +114,11 @@ int main() {
         ++iter;
     }
 
+    int count = 0;
 
     print_array(a.begin(), a.end());
 
-    merge_sort(a, a.begin(), a.end());
+    sort_and_count(count, a, a.begin(), a.end());
 
     print_array(a.begin(), a.end());
 
