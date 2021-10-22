@@ -25,7 +25,7 @@ long long int quick_sort(int* left, int* right) {
     }
     else {
         // int* pivot = left;      // section 1: select 1st item as pivot       Answer: 162085
-        int* pivot = right-1;   // section 2: select last item as pivot      Answer: 194971
+        int* pivot = right-1;   // section 2: select last item as pivot      Answer: 164123
 
         int* pivot_location = partition(pivot, left, right);
 
