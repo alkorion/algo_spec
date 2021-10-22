@@ -15,11 +15,13 @@ void print_array(int* start, int* end) {
     std::cout << "]\n";
 }
 
-void quick_sort(int* left, int* right) {
+long long int quick_sort(int* left, int* right) {
+    static long long int comparisons;
+
     int n = right - left;
 
     if (n <= 1) {
-        return;
+        return comparisons;
     }
     else {
         int* pivot = left;
@@ -33,9 +35,15 @@ void quick_sort(int* left, int* right) {
         // recursively call quick_sort on both sides of pivot
         quick_sort(left, pivot_location); // left side
         quick_sort(pivot_location+1, right); // right side
-
+        
+        // count the comparisons in the recursive calls
+        int m_left = (pivot_location - left) - 1;
+        int m_right = (right - pivot_location + 1) - 1;
+        comparisons += (m_left + m_right);
 
     }
+
+    return comparisons;
     
 }
 
@@ -85,10 +93,11 @@ int main() {
         ++iter;
     }
 
-    print_array(a.begin(), a.end());
+    // print_array(a.begin(), a.end());
 
-    quick_sort(a.begin(), a.end());
-    print_array(a.begin(), a.end());
+    long long int comparisons = quick_sort(a.begin(), a.end());
+    // print_array(a.begin(), a.end());
+    std::cout << "Comparisons made: " << comparisons << '\n';
 
 
     return 0;
