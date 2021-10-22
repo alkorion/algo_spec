@@ -24,7 +24,9 @@ long long int quick_sort(int* left, int* right) {
         return comparisons;
     }
     else {
-        int* pivot = left;
+        // int* pivot = left;      // section 1: select 1st item as pivot       Answer: 162085
+        int* pivot = right-1;   // section 2: select last item as pivot      Answer: 194971
+
         int* pivot_location = partition(pivot, left, right);
 
         // debug: show pivot results
@@ -32,11 +34,11 @@ long long int quick_sort(int* left, int* right) {
         // print_array(left, pivot_location);
         // print_array(pivot_location+1, right);
 
-        // recursively call quick_sort on both sides of pivot
+        // // recursively call quick_sort on both sides of pivot
         quick_sort(left, pivot_location); // left side
         quick_sort(pivot_location+1, right); // right side
         
-        // count the comparisons in the recursive calls
+        // // count the comparisons in the recursive calls
         int m_left = (pivot_location - left) - 1;
         int m_right = (right - pivot_location + 1) - 1;
         comparisons += (m_left + m_right);
@@ -49,6 +51,17 @@ long long int quick_sort(int* left, int* right) {
 
 // partition elements between pointers and return partition-element location
 int* partition(int* pivot, int* left, int* right) {
+
+    // regardless of current pivot position, move it to the front of the array
+    // print_array(left, right);
+
+    int temp = *pivot;
+    *pivot = *left;
+    *left = temp;
+    // tell the pivot to correctly point at the start now
+    pivot = left;
+
+    // print_array(left, right);
 
     int* i = left+1; // initialize j to the same in the for loop
     
@@ -66,7 +79,7 @@ int* partition(int* pivot, int* left, int* right) {
     }
 
     // once j falls off the array, move the pivot into place (swap w/ i-1)
-    int temp = *pivot;
+    temp = *pivot;
     *pivot = *(i-1);
     *(i-1) = temp;
 
