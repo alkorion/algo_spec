@@ -4,6 +4,7 @@
 
 #include "quick_sort.h"
 
+// constexpr int ARRAY_SIZE = 8;
 constexpr int ARRAY_SIZE = 10000;
 using array = std::array<int,ARRAY_SIZE>;
 
@@ -15,6 +16,37 @@ void print_array(int* start, int* end) {
     std::cout << "]\n";
 }
 
+int* select_median_pivot(int* left, int* right) {
+    int n = right - left;
+    int* eff_right = right - 1;
+    int* middle;
+    
+    if (n % 2 == 0) { // if even amount
+         middle = (left + n/2) - 1;  // choose the "left middle" value as the center
+    }
+    else { // n is odd, just pick the middle value
+        middle = left + n/2;
+    }
+
+    // annoying and probably ineffecient switch cases:
+    if (*middle < *left && *eff_right < *left) { // left is largest
+        if (*middle < *eff_right) { return eff_right; }
+        else { return middle; }
+    }
+    if (*middle < *eff_right && *left < *eff_right) { // right is largest
+        if (*middle < *left) { return left; }
+        else { return middle; }
+    }
+    if (*eff_right < *middle && *left < *middle) { // middle is largest
+        if (*eff_right < *left) { return left; }
+        else { return eff_right; }
+    }
+
+    // this should never be reached since there are no equal values, but adding to silence warnings... (facepalm)
+    return middle;
+
+}
+
 long long int quick_sort(int* left, int* right) {
     static long long int comparisons;
 
@@ -24,15 +56,11 @@ long long int quick_sort(int* left, int* right) {
         return comparisons;
     }
     else {
-        // int* pivot = left;      // section 1: select 1st item as pivot       Answer: 162085
-        int* pivot = right-1;   // section 2: select last item as pivot      Answer: 164123
+        // int* pivot = left;                                   // section 1: select 1st item as pivot          Answer: 162085
+        // int* pivot = right-1;                                // section 2: select last item as pivot         Answer: 164123
+        int* pivot = select_median_pivot(left, right);          // section 3: select median-of-three  as pivot  Answer: 138382
 
         int* pivot_location = partition(pivot, left, right);
-
-        // debug: show pivot results
-        // print_array(left, right);
-        // print_array(left, pivot_location);
-        // print_array(pivot_location+1, right);
 
         // // recursively call quick_sort on both sides of pivot
         quick_sort(left, pivot_location); // left side
@@ -52,16 +80,11 @@ long long int quick_sort(int* left, int* right) {
 // partition elements between pointers and return partition-element location
 int* partition(int* pivot, int* left, int* right) {
 
-    // regardless of current pivot position, move it to the front of the array
-    // print_array(left, right);
-
     int temp = *pivot;
     *pivot = *left;
     *left = temp;
     // tell the pivot to correctly point at the start now
     pivot = left;
-
-    // print_array(left, right);
 
     int* i = left+1; // initialize j to the same in the for loop
     
@@ -95,9 +118,7 @@ int main() {
     std::string file_name {"assignment_input.txt"};
 
     std::ifstream in_file {file_name};
-
     int* iter = a.begin();
-
     while (in_file) {
         // read stuff from the file into a string and print it
         int num;
@@ -106,7 +127,11 @@ int main() {
         ++iter;
     }
 
+    // std::array<int,7> a = {1,2,3,4,5,6,7}; 
+
     // print_array(a.begin(), a.end());
+    // int* temp = select_median_pivot(a.begin(), a.end());
+    // std::cout << "The median-of-three = " << *temp << '\n';
 
     long long int comparisons = quick_sort(a.begin(), a.end());
     // print_array(a.begin(), a.end());
